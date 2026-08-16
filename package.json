@@ -1,0 +1,13 @@
+{
+  "name": "void-live",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Minimalist persistent multiplayer space arena",
+  "scripts": {
+    "test": "node --check server.mjs && node --check --input-type=module < client/game.js && node tests/identity.mjs && node tests/flight.mjs && node tests/projectile-physics.mjs && node tests/charge-ui.mjs && node tests/planet-techno.mjs && node tests/world-end.mjs && node tests/integration.mjs"
+  },
+  "dependencies": {
+    "ws": "8.21.3"
+  }
+}

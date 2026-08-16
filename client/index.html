@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#020508">
+  <title>VOID//LIVE — space arena</title>
+  <link rel="stylesheet" href="./style.css?v=2.42.0">
+</head>
+<body>
+  <canvas id="game" aria-label="3D space game"></canvas>
+  <div id="vignette"></div>
+  <header class="topbar">
+    <div class="brand">VOID<span>//</span>LIVE</div>
+    <div class="sector"><i></i> SECTOR A-1116 <b id="netState">CONNECTING</b></div>
+    <div class="players"><button id="nameEdit" class="callsign-button" title="Change callsign (N)"><span id="selfName">YOU</span> ✎</button> · <span id="playerCount">1</span> PILOTS · ☠ <span id="killCount">0</span></div>
+  </header>
+  <aside class="telemetry">
+    <div class="label">SPEED</div>
+    <div><strong id="speed">000</strong><small> u/s</small></div>
+    <div class="thrust"><i id="thrustBar"></i></div>
+  </aside>
+  <aside class="targeting">
+    <div class="label">TARGET</div>
+    <strong id="targetName">—</strong>
+    <span id="targetDistance">SCANNING</span>
+    <span id="targetEta" class="tgt-eta"></span>
+    <em id="targetFlavor" class="tgt-flavor"></em>
+    <span id="targetDetail" class="tgt-detail"></span>
+  </aside>
+  <div class="crosshair"><i></i><b></b><span></span></div>
+  <div id="hitmarker" class="hitmarker">×</div>
+  <section class="stat-panel">
+    <div class="stat"><span>HULL</span><div class="bar"><i id="healthBar"></i></div><b id="healthText">100</b></div>
+    <div class="stat"><span>FUEL</span><div class="bar"><i id="fuelBar" class="fuel"></i></div><b id="fuelText">100</b></div>
+    <div class="stat"><span>AMMO</span><div class="bar"><i id="ammoBar" class="ammo"></i></div><b id="ammoText">80</b></div>
+    <div class="stat"><span>SPEC</span><div class="bar"><i id="specBar" class="spec"></i></div><b id="specText">0</b></div>
+  </section>
+  <div id="shipStats" class="ship-stats">
+    <h3><span id="ssName">—</span> <small id="ssWeapon"></small></h3>
+    <div class="ss-row"><label>SPEED</label><div class="ss-bar"><i id="ssSpeed"></i></div></div>
+    <div class="ss-row"><label>ACCEL</label><div class="ss-bar"><i id="ssAccel"></i></div></div>
+    <div class="ss-row"><label>RANGE</label><div class="ss-bar"><i id="ssRange"></i></div></div>
+    <small class="ss-hint">TAB — switch ship</small>
+  </div>
+  <section id="feed" class="feed" aria-live="polite"></section>
+  <aside id="killboard" class="killboard"><h5>TOP KILLS</h5><ol id="killboardList"></ol></aside>
+  <button id="shipSwitch" class="ship-switch">SHIP: <b id="shipName">—</b> · SWITCH</button>
+  <div class="minimap-frame"><span class="mm-label">SCANNER</span><canvas id="minimap"></canvas></div>
+  <section class="controls">
+    <span><kbd>WASD</kbd> FLY</span><span><kbd>MOUSE</kbd> AIM</span><span><kbd>CLICK</kbd> FIRE</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>RMB</kbd> SPECIAL</span><span><kbd>TAB</kbd> SHIP</span><span><kbd>N</kbd> NAME</span><span><kbd>Q E</kbd> ROLL</span>
+  </section>
+  <section id="gate" class="gate">
+    <div class="gate-grid"></div>
+    <div class="gate-content">
+      <p class="eyebrow">PERSISTENT MULTIPLAYER SPACE ARENA</p>
+      <h1>VOID<span>//</span>LIVE</h1>
+      <p>Fly free. Find other pilots. Shoot before they shoot you. Watch your fuel — dock at a station to recharge.</p>
+      <label class="name-field" for="pilotName"><span>CALLSIGN <em>OPTIONAL</em></span><input id="pilotName" type="text" maxlength="20" autocomplete="nickname" placeholder="Leave blank for pilot ID"></label>
+      <button id="enterBtn">ENTER SECTOR <i>→</i></button>
+      <small>The browser needs one click to lock the mouse · ESC releases the cursor</small>
+    </div>
+  </section>
+  <section id="namePanel" class="name-panel hidden" aria-label="Change callsign">
+    <div>
+      <p>CALLSIGN</p>
+      <h2>CHANGE PILOT NAME</h2>
+      <input id="nameEditInput" type="text" maxlength="20" autocomplete="nickname" placeholder="Leave blank for pilot ID">
+      <small>Shown to every pilot immediately</small>
+      <nav><button id="nameCancel" class="secondary">CANCEL</button><button id="nameSave">SAVE CALLSIGN</button></nav>
+    </div>
+  </section>
+  <section id="death" class="death hidden">
+    <p>SIGNAL LOST</p><h2>SHIP DESTROYED</h2><span id="respawnTime">RESPAWN 3</span><small id="deathCause" class="death-cause"></small>
+  </section>
+  <div id="emergency">⚠ EMERGENCY FUEL — LIMP MODE ⚠</div>
+  <div id="peerframes"></div>
+  <div id="chargeEta" class="charge-eta"><i class="charge-arrow"></i><b class="charge-label"></b></div>
+  <div id="resetLabel" class="reset-label"><i class="reset-arrow"></i><b class="reset-label-text"></b></div>
+  <div id="touchControls" class="touch-controls" aria-hidden="true">
+    <div id="joyZone" class="joy-zone"></div>
+    <div id="joyBase" class="joy-base"><i id="joyKnob" class="joy-knob"></i></div>
+    <div class="tc-cluster">
+      <button id="tcBoost" class="tc-btn tc-boost" aria-label="Boost">BOOST</button>
+      <button id="tcSpecial" class="tc-btn tc-special" aria-label="Special weapon">SPEC</button>
+      <button id="tcFire" class="tc-btn tc-fire" aria-label="Fire">FIRE</button>
+    </div>
+  </div>
+  <div id="helpCard" class="help-card">
+    <h4>FLIGHT MANUAL</h4>
+    <div class="help-desktop">
+    <div class="help-grid">
+      <div><kbd>W A S D</kbd><span>fly / strafe</span></div>
+      <div><kbd>MOUSE</kbd><span>aim &amp; steer</span></div>
+      <div><kbd>LEFT CLICK</kbd><span>fire blaster</span></div>
+      <div><kbd>RIGHT CLICK</kbd><span>special weapon</span></div>
+      <div><kbd>SHIFT</kbd><span>turbo boost</span></div>
+      <div><kbd>Q / E</kbd><span>roll</span></div>
+      <div><kbd>TAB</kbd><span>switch ship</span></div>
+      <div><kbd>SPACE / CTRL</kbd><span>up / down</span></div>
+    </div>
+    </div>
+    <div class="help-mobile">
+      <div><b>◉ JOYSTICK</b><span>left thumb — steer &amp; thrust</span></div>
+      <div><b>FIRE</b><span>right thumb — hold to blast</span></div>
+      <div><b>SPEC</b><span>launch special weapon</span></div>
+      <div><b>BOOST</b><span>hold for a huge speed surge</span></div>
+      <div><b>SHIP</b><span>tap to switch ship (top-right)</span></div>
+      <div><b>✎ callsign</b><span>tap your name up top to rename</span></div>
+    </div>
+    <small class="help-dismiss">tap / click anywhere to dismiss · <kbd>H</kbd> or ? to reopen</small>
+  </div>
+  <button id="helpBtn" class="help-btn" title="Controls (H)">?</button>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="./game.js?v=2.54.1"></script>
+</body>
+</html>

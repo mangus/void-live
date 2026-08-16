@@ -1,0 +1,29 @@
+Build a minimalist 3D multiplayer space arena that runs entirely in the browser and is
+live 24/7 — one shared world every visitor drops straight into.
+
+STACK
+- Three.js for rendering (dark space, bright neon wireframe aesthetic — cyan/amber/magenta on near-black).
+- A tiny Node.js WebSocket server as the authoritative relay for shared state.
+- Serve it same-origin behind the existing reverse proxy (static client + a /ws socket). No external tunnels.
+
+GAMEPLAY
+- Land on the page, click ENTER, and you are instantly flying a wireframe spaceship in a shared sector.
+- 6-DOF flight: WASD move, mouse aim, Shift turbo boost, Q/E roll.
+- Fire with left click (tap on mobile); a right-click / two-finger special weapon per ship
+  (laser lance, rockets, proximity mines, crystal-wake). Limited ammo + special, reload at stations.
+- Shoot other live players and destructible objects; die, see why, respawn elsewhere. Always live.
+
+WORLD
+- Several ships to choose from (random on join, TAB to switch) with distinct stats + shapes; some twin-cannon.
+- Big planets on drawn orbital rings (varied sizes, one giant), a few destructible triangle-shell planets
+  you can shoot open and fly inside; one colour-shifting self-healing planet.
+- Growing fractal "flower/spiral" crystals (some sprout new branches), shootable piece by piece.
+- Fuel + ammo charging stations (energy-bubble style), a HUD (hull/fuel/ammo/special/speed),
+  a rotating 3D minimap showing planets, stations and other pilots, and on-screen markers/arrows for peers.
+- Quiet electro-techno ambient soundtrack + deep explosion/laser SFX.
+- A red-shrouded black-hole "RESET" object: shooting it warns every pilot that someone is trying to end the world; enough hits and everything — world, ships, HUD — spirals into the hole over ~4 s, leaving only the singularity on screen until the player refreshes into a fresh world.
+
+QUALITY BAR
+- Mobile-friendly (touch controls, ship fully visible in portrait).
+- Verify every change end-to-end in a real browser and with an automated test suite before calling it done.
+- Ship it iteratively: get a playable core live first, then layer features one request at a time.
