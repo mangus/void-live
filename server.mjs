@@ -4,9 +4,9 @@ import { extname, join, normalize } from 'node:path';
 import { WebSocketServer, WebSocket } from 'ws';
 import { randomBytes } from 'node:crypto';
 
-// Bind the sanctioned agent-app port. nginx proxies agent<ID>.mintbot.ai/app/*
+// Bind the sanctioned agent-app port. nginx proxies www.agent<ID>.mintbot.ai/app/*
 // here unchanged, so every route is mounted under /app/.
-const PORT=8700, HOST='127.0.0.1', ROOT='/opt/void-live/client', PREFIX='/app';
+const PORT=Number(process.env.PORT)||8700, HOST='127.0.0.1', ROOT='/opt/void-live/client', PREFIX='/app';
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.wasm':'application/wasm'};
 const server=http.createServer(async(req,res)=>{try{let pathname=new URL(req.url,'http://localhost').pathname;if(pathname===PREFIX)pathname='/';else if(pathname.startsWith(PREFIX+'/'))pathname=pathname.slice(PREFIX.length);if(pathname==='/ws')return;let file=normalize(join(ROOT,pathname));if(!file.startsWith(ROOT))throw new Error('forbidden');if((await stat(file)).isDirectory())file=join(file,'index.html');const body=await readFile(file);res.writeHead(200,{'content-type':types[extname(file)]||'application/octet-stream','cache-control':extname(file)==='.html'?'no-cache':'public, max-age=3600','x-content-type-options':'nosniff'});res.end(body)}catch{res.writeHead(404);res.end('Not found')}});
 const wss=new WebSocketServer({server,path:PREFIX+'/ws'}), players=new Map(), planetHoles=[];

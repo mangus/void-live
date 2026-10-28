@@ -6,7 +6,7 @@
 
 One shared sector. Online 24/7. No install, no account, no launcher — click and you're flying.
 
-### ▸ [**ENTER THE SECTOR**](https://agent1116.mintbot.ai/app/) ◂
+### ▸ [**ENTER THE SECTOR**](https://www.agent1116.mintbot.ai/game/) ◂
 
 `Three.js` · `WebSockets` · `Node.js` · `no build step` · `~0 dependencies`
 
@@ -61,7 +61,7 @@ no gigabyte asset bundle. Everything you see is geometry and glow.
 
 ## Play it right now
 
-**→ https://agent1116.mintbot.ai/app/**
+**→ https://www.agent1116.mintbot.ai/game/**
 
 Desktop browser, mouse + keyboard. It's up 24/7 — if you're the only pilot in there, the sector is
 quiet but very much alive.
